@@ -1,0 +1,64 @@
+\titledquestion{Noise}[6]
+
+The road of SC101 country is represented by an undirected graph $G = (V, E)$ and each vertex represents a city or an airport. The set of airports is represented by $T \subset V$.
+
+A vertex $v$ is said to \textit{be effected by noise} from an airport $t$ if the length of the shortest path from $t$ to $v$ is not larger than $R$. We want to find all the vertices that have noise.
+
+Please design an algorithm to solve this question. You may call any algorithm learned in lecture as a subroutine but be sure to indicate its input. You \textbf{don't} need to prove the correctness of your algorithm. Then, analyze your \textbf{time complexity}.
+
+To get full credits, the time complexity of your algorithm should not exceed $O\left(\left(|V| + |E|\right) \log |V|\right)$.
+
+\textbf{Input:}
+\begin{itemize}
+    \item $G = (V, E)$, where $V=\{1,2,\ldots, n\}$, $E=\{(u_i,v_i,w_i):i=1,2,\ldots, m\}$, $w_i > 0$
+    \item $T = \{t_1, \ldots, t_{l}\}$, where $|T| = l$, $1 \le t_i \le n$
+    \item A positive number $R$
+\end{itemize}
+
+\textbf{Output:} All vertices $v$ that are effected by noise from \textbf{at least one} airport $t \in T$.
+
+
+\begin{solution}
+
+    To find all vertices affected by noise from at least one airport within a given distance $R$, we can use an efficient algorithm that involves a single execution of Dijkstra's algorithm from a "abstract" node. 
+    The pseudocode for the algorithm is as follows:
+
+    \begin{algorithmic}[1]
+        \Function{FindNoisedVerticesEfficiently}{$G, T, R$}
+        \State $G' \gets \Call{AddAbstractSource}{G, T}$
+        \State $distance \gets \Call{Dijkstra}{G', s}$
+        \State $noisedVertices \gets \text{Set}()$
+        \ForAll{$v \in V$}
+        \If{$distance[v] \leq R$}
+        \State $noisedVertices.\text{add}(v)$
+        \EndIf
+        \EndFor
+        \State \Return $noisedVertices$
+        \EndFunction
+        \Statex
+        
+        \Function{AddAbstractSource}{$G, T$}
+        \State $G' \gets \text{copy of } G$
+        \State $s \gets \text{new vertex not in } V$
+        \State $V'.\text{add}(s)$
+        \ForAll{$t \in T$}
+        \State $E'.\text{add}((s, t, 0))$
+        \EndFor
+        \State \Return $G'$
+        \EndFunction
+    \end{algorithmic}
+
+    \pagebreak
+
+    \textbf{Time Complexity Analysis:}
+
+    Adding the abstract and zero-weight edges takes $O(l)$ time, where $l = |T|$. Running Dijkstra's algorithm once on the new graph $G'$ has a time complexity of $O((|V'| + |E'|) \log |V'|)$. Since we only add $l$ vertices and $l$ edges, $|V'| = |V| + 1$ and $|E'| = |E| + l$, which does not significantly change the complexity. The overall time complexity remains $O((|V| + |E|) \log |V|)$, as the addition of the abstract and its edges does not asymptotically increase the number of vertices or edges by more than a constant factor.
+
+    This algorithm efficiently finds all vertices affected by noise from at least one airport within the specified range $R$ and runs within the desired time complexity.
+
+
+\end{solution}
+
+
+
+

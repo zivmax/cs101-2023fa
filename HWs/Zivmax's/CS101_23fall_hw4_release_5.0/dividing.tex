@@ -1,0 +1,116 @@
+\titledquestion{Dividing with Creativity}
+
+In this question, you are required analyze the run-time of algorithms with different dividing methods mentioned below. For each subpart except the third one, your answer should include:
+\begin{enumerate}
+    \item Describing the recurrence relation of the run-time $T(n)$. (Worth 1 point in 4)
+    \item Finding the asymptotic order of the growth of $T(n)$ i.e. find a function $g$ such that $T(n) = O(g(n))$. Make sure your upper bound for $T(n)$ is tight enough. (Worth 1 point in 4)
+    \item Show your \textbf{reasoning} for the upper bound of $T(n)$ or your process of obtaining the upper bound starting from the recurrence relation step by step. (Worth 2 points in 4)
+\end{enumerate}
+
+In each subpart, you may ignore any issue arising from whether a number is an integer as well as assuming \(T(0) = 0\) and \(T(1) = 1\). You can make use of the Master Theorem, Recursion Tree or other reasonable approaches to solve the following recurrence relations.
+
+\begin{parts}
+    \part[4] An algorithm $\mathcal{A}_1$ takes $\Theta(n)$ time to partition the original problem into 2 sub-problems, one of size $\lambda n$ and the other of size $(1-\lambda)n$ (here $\lambda \in \left(0, \frac{1}{2}\right)$), then recursively runs itself on both of the 2 sub-problems and finally takes $\Theta(n)$ time to merge the answers of the 2 sub-problems.
+
+    \begin{solution}
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Replace `\vspace{5in}' with your answer.
+        \begin{enumerate}
+            \item
+                  The recurrence relation for the algorithm can be expressed as:
+                  $$T(n) = T(\lambda) + T((1-\lambda)) + O(n)$$
+
+            \item
+                  The overall time complexity is:
+                  $$T(n) = O(n \log_{\frac{1}{-\lambda}}n)$$
+
+            \item
+        \end{enumerate}
+        \vspace{3in}
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+    \end{solution}
+
+    \pagebreak
+
+    \part[4] An algorithm $\mathcal{A}_2$ takes $\Theta(n)$ time to partition the original problem into 2 sub-problems, one of size $k$ and the other of size $(n - k)$ (here $k \in \mathbb{Z}^+$ is a constant), then recursively runs itself on both of the 2 sub-problems and finally takes $\Theta(n)$ time to merge the answers of the 2 sub-problems.
+
+    \begin{solution}
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Replace `\vspace{1.5in}' with your answer.
+        \begin{enumerate}
+            \item
+                  The recurrence relation for the algorithm is expressed as:
+                  $$T(n) = T(n - k) + O(n) + O(k)$$
+
+            \item
+                  The overall time complexity is:
+                  $$T(n) = O(n)$$
+
+            \item
+                  By description in the problem:
+                  $$T(n) = T(n-k) + O(n) + O(k)$$
+                  $$T(n-k) = T(n-2k) + O(n) + O(k)$$
+
+                  Thus we have:
+                  $$T(n) = O(k) \lfloor\frac{n}{k}\rfloor + O(n) = O(n)$$
+        \end{enumerate}
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+    \end{solution}
+
+    \part{} Solve the recurrence relation $T(n) = T(\alpha n) + T(\beta n) + \Theta(n)$ where $\alpha + \beta < 1$ and $\alpha \geq \beta$.
+    \begin{subparts}
+        \subpart[2] Fill in the \textbf{four} blanks in the mathematical derivation snippet below.
+        \begin{align*}
+            T(n) & = T(\alpha n) + T(\beta n) + \Theta(n)                                                                \\
+                 & = (T(\alpha ^2 n) + T(\alpha \beta n) + \Theta(\alpha n)) +
+            (T(\alpha \beta n) + T(\beta ^2 n) + \Theta(\beta n)) + \Theta(n)                                            \\
+                 & = (T(\alpha ^2 n) + 2T(\alpha \beta n) + T(\beta ^2 n)) + \Theta(n) (1 + (\alpha + \beta))            \\
+                 & = \dots                                                                                               \\
+                 & = \sum _ {i=0} ^k C_k^i T(\alpha^{k-i}\beta^{i}) + \Theta(n) \sum _ {j = 0} ^{k-1} (\alpha + \beta)^j
+        \end{align*}
+
+        \subpart[3] Based on the previous part, complete this question.
+        \begin{solution}
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            % Replace `\vspace{3in}' with your answer.
+            \vspace{3in}
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \end{solution}
+    \end{subparts}
+
+    \pagebreak
+
+    \part[4] An algorithm $\mathcal{A}_3$ takes $\Theta(\log n)$ time to convert the original problem into 2 sub-problems, each one of size $\sqrt{n}$, then recursively runs itself on both of the 2 sub-problems and finally takes $\Theta(\log n)$ time to merge the answers of the 2 sub-problems.
+
+    Hint: W.L.O.G., you may assume $n = 2^m$ for $m \in \mathbb{Z}$.
+    \begin{solution}
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % Replace `\vspace{3in}' with your answer.
+        \begin{enumerate}
+            \item
+                  The recurrence relation for the algorithm is expressed as:
+                  $$T(n) = 2T(\sqrt{n}) + O(\log n)$$
+
+            \item
+                  The overall time complexity is:
+                  $$T(n) = O(\log n \log \log n)$$
+
+            \item
+                  Let $n = 2^m$ for $m \in \mathbb{Z}$, then we have:
+                  $$T(2^m) = 2T(2^{\frac{m}{2}}) + O(m)$$
+                  Let $S(m) = T(2^m)$, then we have:
+                  $$S(m) = 2S(\frac{m}{2}) + O(m)$$
+                  Let $S(m) = m \cdot L(m)$, then we have:
+                  \begin{align*}
+                      m \cdot L(m) & = 2 \cdot \frac{m}{2} \cdot L\left(\frac{m}{2}\right) + O(m) \\
+                      L(m)         & = L\left(\frac{m}{2}\right) + O(1)                           \\
+                      L(m)         & = O(\log m)                                                  \\
+                      T(2^m)       & = O(m \log m) = O(\log n \log \log n)                        \\
+                      T(n)         & = O(\log n \log \log n)
+                  \end{align*}
+
+        \end{enumerate}
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+    \end{solution}
+\end{parts}

@@ -1,0 +1,83 @@
+\titledquestion{Sorting practice}\label{que:5}
+
+Given an array:  
+\begin{align*}
+    1, 4, 7, 3, 5, 2, 8, 6  
+\end{align*}
+
+% we will sort the array in ascending order. For following questions, you need to write down the array after \textbf{each} iteration.
+
+\begin{parts}
+\part[2] Run Insertion Sort for this array. Write down the array \textbf{after} \textbf{each} outer iteration.
+\begin{cpp}
+for(int k = 1; k < n; k++){
+    for(int j = k; j > 0; j--){
+        if( array[j - 1] > array[j] )
+           swap(array[j - 1], array[j]);
+        else
+            break;
+    }
+    print(array);
+}
+\end{cpp}
+\begin{solution}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		% Replace the `vspace{?cm}' with your answer.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{enumerate}[label=(\roman*)]
+        \item \underline{1 4} 7 3 5 2 8 6
+        \item \underline{1 4 7} 3 5 2 8 6
+        \item \underline{1 3 4 7} 5 2 8 6
+        \item \underline{1 3 4 5 7} 2 8 6
+        \item \underline{1 2 3 4 5 7} 8 6
+        \item \underline{1 2 3 4 5 7 8} 6
+        \item \underline{1 2 3 4 5 6 7 8}
+    \end{enumerate}
+\end{solution}
+\part[2] Run Flagged Bubble Sort for this array. Write down the array \textbf{after} \textbf{each} outer iteration. 
+\begin{cpp}
+for(int i = n-1; i > 0; i--){
+    int max_t = array[0];
+    bool sorted = true;
+    for(int j = 1; j <= i; j++){
+        if(array[j] < max_t){
+            array[j-1] = array[j];
+            sorted = false;
+        }
+        else{
+             array[j-1] = max_t;
+             max_t = array[j];
+        }
+    }
+    array[i] = max_t;
+    print(array);
+    if(sorted) break;
+}
+         
+\end{cpp}
+\begin{solution}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		% Replace the `vspace{?cm}' with your answer.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{enumerate}[label=(\roman*)]
+        \item 1 4 3 5 2 7 6 8  
+        \item 1 3 4 2 5 6 7 8
+        \item 1 3 2 4 5 6 7 8
+        \item 1 2 3 4 5 6 7 8
+        \item 1 2 3 4 5 6 7 8
+    \end{enumerate}
+\end{solution}
+\part[2] Run Merge Sort for this array. Write down the array \textbf{after} \textbf{each} merge and underline the sub-array being merged.
+\begin{solution}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		% Replace the `vspace{?cm}' with your answer.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{enumerate}[label=(\roman*)]
+        \item \underline{1} \underline{4} \underline{7} \underline{3} \underline{5} \underline{2} \underline{8} \underline{6}
+        \item \underline{1 4} \underline{3 7} \underline{2 5} \underline{6 8}
+        \item \underline{1 3 4 7} \underline{2 5 6 8}
+        \item \underline{1 2 3 4 5 6 7 8}
+    \end{enumerate}
+\end{solution}
+
+\end{parts}

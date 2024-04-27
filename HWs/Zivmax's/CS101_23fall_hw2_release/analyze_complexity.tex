@@ -1,0 +1,42 @@
+\titledquestion{Analysing the Time Complexity of a C++ Function}[4]
+
+What is the time complexity of \lstinline{fun} (in the form of \(\Theta(f(n))\), where \(n\) is the size of the \lstinline{vector a})?
+
+\begin{cpp}
+    void fun(std::vector<int> a) {
+            int n = a.size();
+            for (int i = 1; i < n; i *= 2) {
+                    // do O(1) operations
+                    for (int j = 0; j < n; j += i * 2) {
+                            // do O(1) operations
+                            for (int k = 0; k < i; ++k) {
+                                    // do O(1) operations
+                                }
+                        }
+                }
+        }
+\end{cpp}
+
+\textbf{NOTE}: Please clearly demonstrate your complexity analysis: you should give the complexity of the basic parts of an algorithm first, and then analyse the complexity of larger parts. The answer of the total complexity alone only accounts for 1pt.
+
+\begin{solution}
+
+    The time-complexity of most internal for loop:
+    \begin{align*}
+        A(x) & = \sum_{k = 0}^{x - 1} (2O(1)) = 2xO(1) \\
+    \end{align*}
+
+    The time-complexity of middle for loop:
+    \begin{align*}
+        B(x, i) & = \sum_{j = 0}^{\lfloor \frac{x}{2i} \rfloor}(A(i) + 2O(1)) = \sum_{j = 0}^{\lfloor \frac{x}{2i} \rfloor}(2iO(1) + 2O(1))  = xO(1) + \frac{x}{i} O(1) \\
+    \end{align*}
+
+    The time-complexity of most external for loop ($\gamma$ is the Euler–Mascheroni constant):
+    \begin{align*}
+        C(x) & = \sum_{i = 1}^{\lfloor \log_2 x \rfloor} (B(x, i) + 2O(1))                                                                            \\
+             & = x(\lfloor \log{2}{x} \rfloor)O(1) + \sum_{i = 1}^{\lfloor \log_2 x \rfloor}\frac{x}{i} O(1) + 2O(1)(\lfloor \log{2}{x} \rfloor - 1)  - xO(1) \\
+             & \approx x( \log{2}{x} )O(1) + \ln \log{2}{x} + \gamma + \frac{1}{2\log{2}{x}} + O(\frac{1}{\log^2{2}{x}}) + 2O(1)( \log{2}{x}  - 1) - xO(1) \\
+    \end{align*}
+
+    So $\Theta(f(n)) = \Theta(C(n) + O(1)) = n\log{n}$.
+\end{solution}

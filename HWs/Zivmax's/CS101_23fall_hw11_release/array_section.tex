@@ -1,0 +1,59 @@
+\titledquestion{Array Section: Maximal Power}
+
+Given a sequence of positive integers $A=\langle a_1,\cdots,a_n\rangle$, we want to divide it into several consecutive sections so that the sum of power of these sections
+is maximized.
+
+The power of section $\langle a_i,\cdots,a_j\rangle$ is defined as $aX_{i,j}^2+bX_{i,j}+c$, where
+\begin{itemize}
+    \item $a,b,c$ are given constants.
+    \item $X_{i,j}=\sum\limits_{k=i}^j a_k$ is the sum of values in the section.
+\end{itemize}
+
+Please design a \textbf{dynamic programming} algorithm that returns the maximal sum of power of the sections that you divided.
+
+For example, if \(a=-1,b=10,c=-20\) and \(A=\langle 2,2,3,4\rangle\), the maximal sum of power is \(9\), and the way to divide the sequence is: \(\langle 2,2\rangle,\langle 3\rangle,\langle 4\rangle\).
+
+\begin{parts}
+    \part[3] Define the subproblems for $i\in[0,n]$: $OPT(i)=$ the maximal sum of power of if you only consider dividing the first $i$ elements. Give your Bellman equation to solve the subproblems.
+    \begin{solution}
+        $$
+            OPT(i) = \begin{cases}
+                0                                                                 & \text{if } i = 0 \\
+                \max_{1 \leq j \leq i} \{ OPT(j-1) + aX_{j,i}^2 + bX_{j,i} + c \} & \text{if } i > 0 \\
+            \end{cases}
+        $$
+    \end{solution}
+
+    \part[1] What is the answer to this question in terms of $OPT$?
+    \begin{solution}
+        The answer to the problem is $OPT(n)$.
+    \end{solution}
+
+    \part[3] What is the runtime complexity of your algorithm? (answer in $\Theta(\cdot)$)
+    
+    \textbf{Hint:} How will you compute $X_{j,i}$ in $\Theta(1)$ time? Please give your analysis of the preprocessing and computing complexity.
+    \begin{solution}
+        To calculate the runtime complexity, we consider the number of subproblems and the time it takes to solve each subproblem. We have $n$ subproblems corresponding to $OPT(1), OPT(2), \ldots, OPT(n)$. For each subproblem $OPT(i)$, we must compute the maximum over $i$ possible sections. The complexity of computing each section's power is $O(1)$ after preprocessing, so the complexity for each $OPT(i)$ is $O(i)$.
+        
+        The total complexity is the sum of the complexities for all subproblems:
+        
+        $$
+        \sum_{i=1}^{n} O(i) = O\left(\frac{n(n+1)}{2}\right) = O(n^2)
+        $$
+        
+        Thus, the runtime complexity of the algorithm is $\Theta(n^2)$.
+                
+        \pagebreak
+        
+        \textbf{Preprocessing and Computing Complexity:}
+
+        To compute $X_{j,i}$ in $\Theta(1)$ time, we can preprocess the input sequence to create a prefix sum array $P$, where $P[i] = \sum_{k=1}^{i} a_k$. The preprocessing step takes $\Theta(n)$ time.
+
+        Once we have the prefix sum array, we can compute $X_{j,i}$ using $P[i] - P[j-1]$ in constant time.
+
+        The preprocessing complexity is $\Theta(n)$, and the overall complexity remains $\Theta(n^2)$ since this does not dominate the $\Theta(n^2)$ complexity of solving the subproblems.
+    \end{solution}
+\end{parts}
+
+
+

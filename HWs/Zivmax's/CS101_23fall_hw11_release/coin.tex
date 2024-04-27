@@ -1,0 +1,40 @@
+\titledquestion{Odd number of coins changing}
+
+Given n coin denominations $\{c_1,c_2,\cdots,c_n\}$ and a target value $V$, you are going to make change for $V$. However, only odd number of coins is allowed.
+
+Please design a \textbf{dynamic programming} algorithm that find the fewest odd number of coins needed to make change for $V$ (or report impossible).
+
+\begin{parts}
+    \part[5] Define the subproblems: $F(v)=$ fewest odd number of coins to make change for $v$ and $G(v)=$ fewest even number of coins to make change for $v$.
+    Give your Bellman equation to solve the subproblems.
+    \begin{solution}
+        $$
+            F(v) = \min_{i \in \{1, \ldots, n\}} \{ G(v - c_i) + 1 \} \quad \case{v - c_i \geq 0}
+        $$
+
+        $$
+            G(v) = \min_{i \in \{1, \ldots, n\}} \{ F(v - c_i) + 1 \} \quad \case{v - c_i \geq 0}
+        $$
+    \end{solution}
+    \part[1] What is the answer to this question in terms of $F,G$?
+    \begin{solution}
+        The answer to the problem is $F(V)$.
+    \end{solution}
+    \part[1] What is the runtime complexity of your algorithm? (answer in $\Theta(\cdot)$)
+    \begin{solution}
+        The runtime complexity of this algorithm can be analyzed as follows:
+        \begin{itemize}
+            \item
+                  We compute $F(v)$ and $G(v)$ for each value from $1$ to $V$.
+            \item
+                  For each computation of $F(v)$ and $G(v)$, we consider all $n$ coin denominations.
+            \item
+                  Therefore, the total number of computations is $O(nV)$.
+            \item
+                  Since each computation involves a constant amount of work (finding a minimum over $n$ coin denominations), the overall complexity is $O(nV)$.
+        \end{itemize}
+
+        Thus, the runtime complexity of the algorithm is $\Theta(nV)$.
+    \end{solution}
+\end{parts}
+

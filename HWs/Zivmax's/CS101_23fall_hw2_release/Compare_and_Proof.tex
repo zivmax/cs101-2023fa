@@ -1,0 +1,46 @@
+\titledquestion{Compare and Proof}
+
+For each pair of functions \(f(n)\) and \(g(n)\), give your answer whether \(f(n) = o(g(n))\), \(f(n) = \omega(g(n))\) or \(f(n) = \Theta(g(n))\).  Give a \textbf{proof} of your answers.
+
+\begin{parts}
+    \part[3] \par
+    \[f(n) = \log(n!)\]
+    \[g(n) = \log(n^n)\]
+
+    \begin{solution}
+        $f(n) = \Theta(g(n))$
+        \begin{align*}
+            \lim_{n\to\infty} \frac{f(n)}{g(n)} & = \lim_{n\to\infty} \frac{\log(n!)}{\log(n^n)}                                                    \\
+                                                & = \lim_{n\to\infty} \frac{\log(n!)}{n\log(n)}                                                     \\
+                                                & = \lim_{n\to\infty} \frac{n\log{n} - n\log{e} + O(\log{n})}{n\log{n}}\ \ (Strling\ approximation) \\
+                                                & = \lim_{n\to\infty} \frac{n\log{\frac{n}{e}} + O(\log{n})}{n\log{n}}                              \\
+                                                & = 1
+        \end{align*}
+
+        Since $0 < 1 < \infty$, $f(n) = \omega(g(n)),\  f(n) = \Theta(g(n))$
+
+
+
+    \end{solution}
+    \newpage
+    \part[3] \par
+    \[f(n) = n^{1+\varepsilon}, \qquad (\varepsilon\in \mathbb{R}^+)\]
+    \[g(n) = n(\log n)^k, \qquad (k\in \mathbb{Z}^+)\]
+
+    \begin{solution}
+        $f(n) = \omega(g(n))$
+        \begin{align*}
+            \lim_{n\to\infty} \frac{f(n)}{g(n)} & = \lim_{n\to\infty} \frac{n^{1+\varepsilon}}{n(\log n)^k}                                                                   \\
+                                                & = \lim_{n\to\infty} \frac{n^{\varepsilon}}{(\log n)^k}                                                                      \\
+                                                & = \lim_{n\to\infty} \frac{\varepsilon n^{\varepsilon - 1}}{k(\log n)^{k-1} \frac{1}{n \ln{2}}}          & \quad (L'Hopital's rule) \\
+                                                & = \lim_{n\to\infty} \frac{\ln(2) \varepsilon n^{\varepsilon}}{k(\log n)^{k-1}}                                                  \\
+                                                & = \lim_{n\to\infty} \frac{\ln(2) \varepsilon^2 n^{\varepsilon - 1}}{k(k-1)(\log n)^{k-2} \frac{1}{n \ln(2)}}   & \quad (L'Hopital's rule) \\
+                                                & = \lim_{n\to\infty} \frac{(\ln(2) \varepsilon)^2 n^{\varepsilon}}{k(k-1)(\log n)^{k-2}}                                              \\
+                                                & \quad \vdots                                                                                                                \\
+                                                & = \lim_{n\to\infty} \frac{(ln(2) \varepsilon)^{k-1} n^{\varepsilon}}{k!(\log n)}                                                    \\
+                                                & = \lim_{n\to\infty} \frac{(ln(2) \varepsilon)^{k} n^{\varepsilon}}{k!}                                   & \quad (L'Hopital's rule) \\
+                                                & = \infty
+        \end{align*}
+    \end{solution}
+
+\end{parts}

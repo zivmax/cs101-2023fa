@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "README": "markdown",
+        "tuple": "cpp"
+    }
+}

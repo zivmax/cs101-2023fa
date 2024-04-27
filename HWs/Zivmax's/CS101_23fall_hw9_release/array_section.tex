@@ -1,0 +1,61 @@
+\titledquestion{Array Section}
+
+Given an upper bound \(M\) and a sequence of positive integers \(A=\langle a_1,\cdots,a_n\rangle\) where \(\forall i \in [1, n], a_i \leq M\), we want to divide it into several consecutive sections so that the sum of each section is less than or equal to the upper bound \(M\), and the number of sections is minimized.
+
+For example, if \(M=6\) and \(A=\langle 4,2,4,5,1\rangle\), the minimum number of sections is \(3\), and there are two ways to divide the sequence \(A\) into \(3\) sections: \(\langle 4\rangle,\langle 2,4\rangle,\langle 5,1\rangle\) and \(\langle 4,2\rangle,\langle 4\rangle,\langle 5,1\rangle\).
+
+Design a greedy algorithm to find the minimum number of sections in \(\Theta(n)\) time, and prove its correctness.
+
+\begin{parts}
+    \part[2] Describe your algorithm in \textbf{pseudocode}.
+    \begin{solution}
+        \begin{algorithmic}
+            \Function{MinimizeSections}{$A, M$}
+            \State $n \gets \text{length of } A$
+            \State $sections \gets 1$
+            \State $currentSum \gets 0$
+
+            \For{$i \gets 1$ to $n$}
+            \If{$currentSum + A[i] > M$}
+            \State $sections \gets sections + 1$
+            \State $currentSum \gets A[i]$
+            \Else
+            \State $currentSum \gets currentSum + A[i]$
+            \EndIf
+            \EndFor
+
+            \State \Return $sections$
+            \EndFunction
+        \end{algorithmic}
+
+    \end{solution}
+    \part[2] Analyse the time complexity based on your \textbf{pseudocode}.
+    \begin{solution}
+        The time complexity of the algorithm is \(\Theta(n)\) since we only need to iterate through the sequence once.
+    \end{solution}
+    \part[1] How to define the sub-problem $g(i)$ in your algorithm?
+    \begin{solution}
+        Define the sub-problem \(g(i)\) as the minimum number of sections required for the subsequence \(A[1...i]\), where \(1 \leq i \leq n\).
+    \end{solution}
+    \part[2] How do you solve $g(i)$ by calling $g(i-1)$ recursively?
+    \begin{solution}
+        \begin{algorithmic}
+            \If{$i = 1$}
+            \State $g(i) \gets 1$
+            \Else
+            \State $g(i) \gets g(i-1)$
+            \If{$\text{sum of elements in the last section of } g(i-1) + A[i] > M$}
+            \State $g(i) \gets g(i) + 1$
+            \EndIf
+            \EndIf
+        \end{algorithmic}
+    \end{solution}
+
+    \pagebreak
+
+    \part[2] Prove the correctness of solving $g(i)$ by calling $g(i-1)$.
+    \begin{solution}
+        To prove the correctness of the greedy algorithm solving \(g(i)\) by using \(g(i-1)\), we argue that if there were a better solution with fewer sections, it would imply that we could add an element to a section or merge sections without exceeding \(M\), contradicting the assumption that our solution wasn't optimal. Since the greedy algorithm makes the best local choice at each step, and since these choices are independent, the overall solution is optimal. Thus, by induction, our algorithm finds the minimum number of sections for sequence \(A\).
+    \end{solution}
+\end{parts}
+

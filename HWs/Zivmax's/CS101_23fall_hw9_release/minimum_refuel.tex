@@ -1,0 +1,172 @@
+\titledquestion{Minimum Refueling}
+
+A vehicle is driving from city A to city B on a highway.
+The distance between A and B is $d$ kilometers.
+The vehicle departs with $f_0$ units of fuel.
+Each unit of fuel makes the vehicle travel one kilometer.
+There are $n$ gas stations along the way.
+Station $i$, denoted as $S_i$, is situated $p_i$ kilometers away from city A\@.
+If the vehicle chooses to refuel at $S_i$, $f_i$ units would be added to the fuel tank whose capacity is unlimited.
+
+Your job is to design a \textbf{greedy} algorithm that returns \textbf{the minimum number of refueling} to make sure the vehicle reaches the destination.
+
+For example, if $d=100, f_0=20, (f_1,f_2,f_3,f_4)=(30,60,10,20), (p_1,p_2,p_3,p_4)=(10,20,30,60)$, the algorithm should return $2$.
+There are two ways of refueling $2$ times.
+The first one is:
+\begin{itemize}
+    \item Start from city A with $20$ units of fuel.
+    \item Drive to station $1$ with $10$ units of fuel left, and refuel to $40$ units.
+    \item Drive to station $2$ with $30$ units of fuel left, and refuel to $90$ units.
+    \item Drive to city B with $10$ units of fuel left.
+\end{itemize}
+And the second one is:
+\begin{itemize}
+    \item Start from city A with $20$ units of fuel.
+    \item Drive to station $2$ with $0$ units of fuel left, and refuel to $60$ units.
+    \item Drive to station $4$ with $20$ units of fuel left, and refuel to $40$ units.
+    \item Drive to city B with $0$ units of fuel left.
+\end{itemize}
+
+Note that:
+\begin{enumerate}
+    \item[1.] $0<p_1<p_2<\cdots<p_n<d$, and $\forall i\in[0,n],f_i\ge 1$.
+    \item[2.] If the vehicle cannot reach the target, return \texttt{-1}.
+    \item[3.] The time complexity of your algorithm should be $O(n\log n)$.
+        You should use a max heap, and simply write \lstinline{heap.push(var)}, \lstinline{var = heap.pop()} in your \textbf{pseudocode}.
+\end{enumerate}
+
+\begin{parts}
+    \part[2] Define the sub-problem $g(i)$ as the indices of an $n$-choose-$i$ permutation of stations $P=(P_1,P_2,\cdots,P_i)\in\text{Per}(n,i)$ satisfying the following conditions:
+    \begin{gather*}
+        g(i)=\{P\in\text{Per}(n,i):\forall k\in[1,n], (P_1,P_2,\cdots, P_k)\in\mathop{\arg\max}_{Q\in C_k}\sum_{j=1}^{i}f_{Q_j}\}\\
+        C_k=\left\{Q\in\text{Per}(n,k):\forall l\in[1,k],f_0+\sum_{j=1}^{l-1}f_{Q_j}\ge p_{Q_l}\right\}\\
+    \end{gather*}
+    Then what is $g(1)$ and $g(2)$ in the example above?
+
+    \begin{solution}
+        $g(1)=\{1\}$, $g(2)=\{2,1\}$.
+    \end{solution}
+
+    \pagebreak
+
+    \part[2] How do you find one of the solutions in $g(i+1)$ by using one of the solutions in $g(i)$?
+    And when does $g(i+1)=\emptyset$?
+
+    \begin{solution}
+        To find a solution in $g(i+1)$ using a solution in $g(i)$:
+
+        \begin{enumerate}
+            \item Let $P = (P_1, ..., P_i)$ be a solution in $g(i)$.
+            \item Calculate available fuel: $\text{fuel} = f_0 + \sum_{j=1}^{i} f_{P_j} - \text{distance to } P_i$.
+            \item Identify stations reachable from $P_i$ with this fuel.
+            \item If no stations are reachable, set $g(i+1) = \emptyset$.
+            \item If reachable, select $S_x$, the station with the most fuel.
+            \item Update $P$ for $g(i+1)$ as $(P_1, ..., P_i, x)$.
+            \item Repeat until the destination is reached or $g(i+1) = \emptyset$ if unreachable.
+        \end{enumerate}
+
+        $g(i+1) = \emptyset$ signifies that the no any destination can be reached with the available fuel.
+    \end{solution}
+
+    \part[2] Prove the correctness of solving $g(i+1)$ by calling $g(i)$ when $g(i+1)\ne\emptyset$.
+    \begin{solution}
+        \\
+        \textbf{Theorem:}\\
+        Extending an optimal solution for $g(i)$ with a greedy choice yields an optimal solution for $g(i+1)$ when $g(i+1) \neq \emptyset$.
+
+        \medskip
+
+        \textbf{Optimal Substructure:} \\
+        An optimal solution to $g(i+1)$ contains within it an optimal solution to $g(i)$. If $P = (P_1, \ldots, P_i)$ is an optimal solution for $g(i)$, then any extension of $P$ to include one additional station must preserve optimality for $g(i+1)$, provided that the extension is done optimally.
+
+        \medskip
+
+        \textbf{Greedy-Choice Property:} \\
+        The greedy choice for extending an optimal solution $P$ to solve $g(i+1)$ is selecting the station $S_g$ that is reachable from $P_i$ with the available fuel and offers the maximum additional fuel. This choice is locally optimal and is made without considering the entire set of remaining stations.
+
+        \medskip
+
+        \textbf{Proof:} \\
+        Assume for contradiction that there is a better station $S_b$ to extend $P$ than the greedy choice $S_g$. If $S_b$ were indeed better, then $P$ followed by $S_b$ would lead to a more optimal solution than $P$ followed by $S_g$. This would contradict the optimality of $P$ for $g(i)$ since we could have reached $S_b$ from $P_i$ and had a better outcome.
+
+        Since no such $S_b$ can exist, the greedy choice $S_g$ must be part of an optimal solution for $g(i+1)$. Therefore, extending $P$ with $S_g$ maintains optimality, and the solution for $g(i+1)$ constructed in this manner is optimal.
+
+    \end{solution}
+
+    \part[2] Define the problem $h(i)$ as the maximal distance that the vehicle can drive from city A:
+    \begin{gather*}
+        h(i)=f_0+\max_{Q\in E_i\cap C_i}\sum_{j=1}^{i}f_{Q_j}\\
+        E_i=\left\{Q\in\text{Per}(n,i):Q_1<Q_2<\cdots<Q_i\right\}\\
+        C_i=\left\{Q\in\text{Per}(n,i):\forall l\in[1,i],f_0+\sum_{j=1}^{l-1}f_{Q_j}\ge p_{Q_l}\right\}\\
+    \end{gather*}
+    Prove that $\forall P\in g(i), f_0+\sum_{j=1}^{i}f_{P_j}=h(i)$.
+
+    \begin{solution}\\
+
+        Let $P \in g(i)$ be an optimal solution for $g(i)$. By definition, $P$ is a permutation of $i$ distinct stations such that the vehicle can reach station $P_j$ from the starting point, or the previous station, with the available fuel.
+
+        \medskip
+
+        Since $P$ is an optimal solution for $g(i)$, the vehicle can reach the $i$-th station, which implies that $P$ satisfies the fuel constraints defined in $C_i$. Therefore, $P \in C_i$.
+
+        \medskip
+
+        Now, consider the definition of $h(i)$, which is the maximal distance that can be driven from city A using any permutation in $E_i \cap C_i$. The optimality of $P$ for $g(i)$ implies that it maximizes the distance traveled with the available fuel, which means that the sum of the fuel amounts at the stations in $P$, plus the initial fuel $f_0$, must be at least as great as for any other permutation in $E_i \cap C_i$.
+
+        \medskip
+
+        Therefore, we have that $f_0 + \sum_{j=1}^{i}f_{P_j} \geq h(i)$. However, since $h(i)$ is the maximum value by definition, it must also hold that $f_0 + \sum_{j=1}^{i}f_{P_j} \leq h(i)$. Combining both inequalities, we conclude that $f_0 + \sum_{j=1}^{i}f_{P_j} = h(i)$ for all $P \in g(i)$, which completes the proof.
+    \end{solution}
+
+    \pagebreak
+
+    \part[3] What is the relationship between $h(i)$ and the minimum number of refueling?
+    And under what condition does the vehicle cannot reach the target?
+    Based on your analysis above, describe your algorithm in \textbf{pseudocode}.
+
+    \begin{solution}
+        \begin{algorithmic}[1]
+            \Require $f_0$ (initial fuel), $d$ (distance to target), $stations$ (array of fuel stations)
+            \Ensure $minStops$ (minimum number of refueling stops to reach the target)
+            \State $currentFuel \gets f_0$
+            \State $currentPosition \gets 0$
+            \State $minStops \gets 0$
+            \While{$currentPosition < d$}
+            \State $maxReachable \gets currentPosition + currentFuel$
+            \If{$maxReachable \geq d$}
+            \State \Return $minStops$
+            \EndIf
+            \State $nextStation \gets \text{null}$
+            \For{each $station$ in $stations$ not yet visited}
+            \If{$station.position \leq maxReachable$ \textbf{and} $station.position > currentPosition$}
+            \If{$nextStation$ is null \textbf{or} $station.fuel > nextStation.fuel$}
+            \State $nextStation \gets station$
+            \EndIf
+            \EndIf
+            \EndFor
+            \If{$nextStation$ is null}
+            \State \Return ``Cannot reach the target''
+            \EndIf
+            \State $currentFuel \gets currentFuel - (nextStation.position - currentPosition) + nextStation.fuel$
+            \State $currentPosition \gets nextStation.position$
+            \State $minStops \gets minStops + 1$
+            \EndWhile
+            \State \Return $minStops$
+        \end{algorithmic}
+    \end{solution}
+
+    \part[2] Analyse the time complexity based on your \textbf{pseudocode}.
+
+    \begin{solution}
+        The time complexity of the algorithm can be analyzed as follows:
+
+        \begin{enumerate}
+            \item Initializing variables takes constant time, $O(1)$.
+            \item The while loop iterates at most $n$ times, which is the number of stations.
+            \item Within the while loop, finding the next best station to refuel involves iterating over the remaining stations. In the worst case, this results in a series of $n + (n-1) + (n-2) + \ldots + 1$, which has a time complexity of $O(n^2)$.
+            \item Updating the current position and fuel takes constant time for each iteration of the while loop, $O(1)$.
+        \end{enumerate}
+
+        Therefore, the overall time complexity of the algorithm is dominated by the nested iteration for selecting the next station, resulting in $O(n^2)$. 
+    \end{solution}
+\end{parts}
